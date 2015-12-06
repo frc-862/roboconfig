@@ -51,6 +51,16 @@ protected:
     std::string root;
     std::string config_path;
 
+    Json::Value server_config;
+
+public:
+    const std::string &get_port() const {
+        return port;
+    }
+
+protected:
+    std::string asString(const mg_str& s) { return std::string(s.p, s.p + s.len); }
+    std::string asString(const mg_str* s) { return std::string(s->p, s->p + s->len); }
 private:
     static void raw_event_handler(struct mg_connection *nc, int ev, void *ev_data);
 };

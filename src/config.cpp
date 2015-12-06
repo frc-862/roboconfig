@@ -48,11 +48,18 @@ void Config::set(const std::string& name, const Json::Value& value) {
     of << value.toStyledString();
 }
 
-void Config::set(const std::string& name, const std::string& json_text) {
+bool Config::set(const std::string& name, const std::string& json_text) {
     Json::Value value;
     if (reader.parse(json_text, value))
     {
         set(name, value);
+        return true;
     }
+    return false;
 }
 
+void Config::remove(const std::string &name) {
+    std::lock_guard<std::mutex> lock(mutex);
+    config_store[name] = Json::nullValue;
+    unlink((path + "/" + name + ".json").c_str());
+}

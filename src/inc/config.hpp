@@ -12,9 +12,9 @@ public:
 
     Json::Value get();
     Json::Value get(const std::string& fname);
-    void set(const std::string& fname, const std::string& value);
+    bool set(const std::string& fname, const std::string& value);
     void set(const std::string& fname, const Json::Value& value);
-
+    void remove(const std::string& fname);
 private:
     Json::Reader reader;
     std::mutex mutex;
