@@ -1,3 +1,13 @@
+.idea
+CMakeFiles
+roboconfig
+roboconfig.dSYM
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+cmake_install.cmake
+install_manifest.txt
+
 # Compiled Object files
 *.slo
 *.lo

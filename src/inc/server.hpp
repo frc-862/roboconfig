@@ -7,7 +7,7 @@
 
 class Server {
 public:
-  Server(const std::string& p="8080", const std::string& ap="/api", const std::string& r="public", const std::string& c="config");
+  Server(const std::string& p, const std::string& ap, const std::string& r, const std::string& c);
   Server(const Json::Value& config);
   Server(const std::string fname);
 
@@ -33,8 +33,10 @@ public:
   static const struct mg_str post_method;
   static const struct mg_str delele_method;
 
-  void send_http_response(struct mg_connection *nc, const std::string& body="", int code=200, const std::string& reason="");
+  void send_http_response(struct mg_connection *nc, const std::string& body="", int code=200, const std::string& reason="OK");
   void send_http_error(struct mg_connection *nc, int code, const std::string& reason="");
+
+  void send_http_json_response(struct mg_connection *nc, const Json::Value& response, int code=200, const std::string& reason="OK");
 
 protected:
   struct mg_mgr mgr;

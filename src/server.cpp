@@ -7,14 +7,17 @@ const struct mg_str Server::delele_method = MG_STR("DELETE");
 
 Server::Server(const std::string& p, const std::string& ap, const std::string& r, const std::string& c) :
   port(p), api_prefix(ap), root(r), config_path(c) {
+  memset(&server_opts, 0, sizeof(server_opts));
   setup();
 }
 
 Server::Server(const Json::Value& config) {
+  memset(&server_opts, 0, sizeof(server_opts));
   setup(config);
 }
 
 Server::Server(const std::string fname) {
+  memset(&server_opts, 0, sizeof(server_opts));
   Json::Value server_config;
   std::ifstream stream(fname, std::ifstream::binary);
   stream >> server_config;
@@ -74,6 +77,15 @@ void Server::event_handler(struct mg_connection *nc, int ev, void *ev_data) {
 }
 
 void Server::raw_event_handler(struct mg_connection *nc, int ev, void *ev_data) {
+  if (ev == MG_EV_HTTP_REQUEST)
+  {
+    struct http_message *hm = (struct http_message*) ev_data;
+    printf("raw request method >%.*s<\n", (int) hm->method.len, hm->method.p);
+    printf("raw request proto >%.*s<\n", (int) hm->proto.len, hm->proto.p);
+    printf("raw request uri >%.*s<\n", (int) hm->uri.len, hm->uri.p);
+    printf("raw request >%s<\n", hm->message.p);
+  }
+  
   Server* me = (Server *) nc->mgr->user_data;
   me->event_handler(nc, ev, ev_data);
 }
@@ -83,6 +95,7 @@ void Server::poll(int delay) {
 }
 
 void Server::http_request(struct mg_connection *nc, int, struct http_message *hm) {
+  printf("http request >%.*s<\n", (int) hm->message.len, hm->message.p);
   if (is_equal(&hm->method, &get_method)) {
     http_get(nc, hm);
 
@@ -95,7 +108,11 @@ void Server::http_request(struct mg_connection *nc, int, struct http_message *hm
   }
 }
 
-void Server::http_get(struct mg_connection *, struct http_message *) {
+void Server::http_get(struct mg_connection *nc, struct http_message *hm) {
+  printf("Here we go, we have a GET\n");
+  printf("Serving >%.*s< out of >%s<\n", (int) hm->uri.len, hm->uri.p, server_opts.document_root);
+  printf("Message >%.*s<\n", (int) hm->message.len, hm->message.p);
+  mg_serve_http(nc, hm, server_opts); 
 }
 
 void Server::http_post(struct mg_connection *, struct http_message *) {
@@ -122,5 +139,16 @@ void Server::send_http_response(struct mg_connection *nc, const std::string& bod
 
 void Server::send_http_error(struct mg_connection *nc, int code, const std::string& reason) {
   send_http_response(nc, "", code, reason);
+}
+
+void Server::send_http_json_response(struct mg_connection *nc, const Json::Value& response, int code, const std::string& reason) {
+  std::string buf = response.toStyledString();
+
+  mg_printf(nc, "HTTP/1.1 %d %s\r\n"
+      "Content-Length: %d\r\n"
+      "Content-Type: application/json\r\n\r\n"
+      "%s",
+      code, reason.c_str(),
+      (int) buf.size(), buf.c_str());
 }
 
