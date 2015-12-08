@@ -13,9 +13,12 @@ set(SOURCE_FILES
         src/inc/mongoose.h
         src/inc/tinydir.h
         src/config.cpp
-        src/inc/config.hpp
+        src/inc/config.h
         src/server.cpp
-        src/inc/server.hpp
-        src/roboconfig.cpp)
+        src/inc/server.h
+        src/roboconfig.cpp
+        src/inc/ws_file_tail.h
+        src/ws_file_tail.cpp
+        )
 
 add_executable(roboconfig ${SOURCE_FILES})

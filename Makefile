@@ -258,6 +258,33 @@ src/server.cpp.s:
 	$(MAKE) -f CMakeFiles/roboconfig.dir/build.make CMakeFiles/roboconfig.dir/src/server.cpp.s
 .PHONY : src/server.cpp.s
 
+src/ws_file_tail.o: src/ws_file_tail.cpp.o
+
+.PHONY : src/ws_file_tail.o
+
+# target to build an object file
+src/ws_file_tail.cpp.o:
+	$(MAKE) -f CMakeFiles/roboconfig.dir/build.make CMakeFiles/roboconfig.dir/src/ws_file_tail.cpp.o
+.PHONY : src/ws_file_tail.cpp.o
+
+src/ws_file_tail.i: src/ws_file_tail.cpp.i
+
+.PHONY : src/ws_file_tail.i
+
+# target to preprocess a source file
+src/ws_file_tail.cpp.i:
+	$(MAKE) -f CMakeFiles/roboconfig.dir/build.make CMakeFiles/roboconfig.dir/src/ws_file_tail.cpp.i
+.PHONY : src/ws_file_tail.cpp.i
+
+src/ws_file_tail.s: src/ws_file_tail.cpp.s
+
+.PHONY : src/ws_file_tail.s
+
+# target to generate assembly for a file
+src/ws_file_tail.cpp.s:
+	$(MAKE) -f CMakeFiles/roboconfig.dir/build.make CMakeFiles/roboconfig.dir/src/ws_file_tail.cpp.s
+.PHONY : src/ws_file_tail.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -282,6 +309,9 @@ help:
 	@echo "... src/server.o"
 	@echo "... src/server.i"
 	@echo "... src/server.s"
+	@echo "... src/ws_file_tail.o"
+	@echo "... src/ws_file_tail.i"
+	@echo "... src/ws_file_tail.s"
 .PHONY : help
 
 

@@ -53,6 +53,10 @@ protected:
 
     Json::Value server_config;
 
+    bool is_websocket(const struct mg_connection *nc) {
+        return nc->flags & MG_F_IS_WEBSOCKET;
+    }
+
 public:
     const std::string &get_port() const {
         return port;

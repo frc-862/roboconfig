@@ -1,4 +1,4 @@
-#include "config.hpp"
+#include "config.h"
 
 #include<fstream>
 #include "tinydir.h"
@@ -58,8 +58,8 @@ bool Config::set(const std::string& name, const std::string& json_text) {
     return false;
 }
 
-void Config::remove(const std::string &name) {
+bool Config::remove(const std::string &name) {
     std::lock_guard<std::mutex> lock(mutex);
     config_store[name] = Json::nullValue;
-    unlink((path + "/" + name + ".json").c_str());
+    return unlink((path + "/" + name + ".json").c_str()) == 0;
 }

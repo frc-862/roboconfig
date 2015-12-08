@@ -30,7 +30,7 @@
 <script language="javascript" type="text/javascript">
 
   var rooms = [];
-  var ws = new WebSocket('ws://' + location.host + '/ws');
+  var ws = new WebSocket('ws://' + location.host + '/tail/test.log');
 
   if (!window.console) { window.console = { log: function() {} } };
 
@@ -39,10 +39,14 @@
   ws.onclose = function(ev) { console.log(ev); };
   ws.onmessage = function(ev) {
     console.log(ev);
-    var div = document.createElement('div');
-    div.innerHTML = ev.data;
-    document.getElementById('messages').appendChild(div);
-
+    JSON.parse(ev.data).forEach(function(line) {
+      var div = document.createElement('div');
+      div.innerHTML = line;
+      document.getElementById('messages').appendChild(div);
+    });
+//    var div = document.createElement('div');
+//    div.innerHTML = ev.data;
+//    document.getElementById('messages').appendChild(div);
   };
 
   window.onload = function() {

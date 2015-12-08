@@ -1,5 +1,5 @@
 #include <fstream>
-#include "server.hpp"
+#include "server.h"
 
 using namespace std;
 
@@ -54,6 +54,7 @@ Server::~Server() {
 void Server::event_handler(struct mg_connection *nc, int ev, void *ev_data) {
     switch (ev) {
     case MG_EV_HTTP_REQUEST:
+        nc->flags |= MG_F_SEND_AND_CLOSE;
         http_request(nc, ev, (struct http_message*) ev_data);
         break;
 
@@ -70,7 +71,9 @@ void Server::event_handler(struct mg_connection *nc, int ev, void *ev_data) {
         break;
 
     case MG_EV_CLOSE:
-        websocket_close(nc);
+        if (is_websocket(nc)) {
+            websocket_close(nc);
+        }
         break;
 
     case MG_EV_POLL:
