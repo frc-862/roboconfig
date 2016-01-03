@@ -6672,7 +6672,7 @@ void mg_hexdump_connection(struct mg_connection *nc, const char *path,
                         MG_SOCK_STRINGIFY_PORT |
                         MG_SOCK_STRINGIFY_REMOTE);
     fprintf(
-        fp, "%lu %p %s %s %s %d\n", (unsigned long) time(NULL), nc, src,
+        fp, "%lu %p %s %s %s %d\n", (unsigned long) time(NULL), (void*) nc, src,
         ev == MG_EV_RECV ? "<-" : ev == MG_EV_SEND
         ? "->"
         : ev == MG_EV_ACCEPT

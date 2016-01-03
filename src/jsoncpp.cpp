@@ -1810,10 +1810,16 @@ bool OurReader::decodeDouble(Token& token, Value& decoded) {
         Char buffer[bufferSize + 1];
         memcpy(buffer, token.start_, length);
         buffer[length] = 0;
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wformat-nonliteral"
         count = sscanf(buffer, format, &value);
+        #pragma GCC diagnostic pop
     } else {
         std::string buffer(token.start_, token.end_);
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wformat-nonliteral"
         count = sscanf(buffer.c_str(), format, &value);
+        #pragma GCC diagnostic pop
     }
 
     if (count != 1)
@@ -4175,7 +4181,10 @@ std::string valueToString(double value, bool useSpecialFloats, unsigned int prec
     // that always has a decimal point because JSON doesn't distingish the
     // concepts of reals and integers.
     if (isfinite(value)) {
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wformat-nonliteral"
         len = snprintf(buffer, sizeof(buffer), formatString, value);
+        #pragma GCC diagnostic pop
     } else {
         // IEEE standard states that NaN values will not compare to themselves
         if (value != value) {
