@@ -1,0 +1,21 @@
+{
+   "Throttle Ramp Rate" : 0.05,
+   "Auton" : {
+      "Motion Plan P" : 0.2,
+      "Motion Plan I" : 0.02,
+      "Motion Plan D" : 0.05
+   },
+   "Upshift Min Throttle" : 0.7,
+   "Throttle Dead Zone" : 0.1,
+   "Turn PID" : {
+      "Motion Plan D" : 0.05,
+      "Motion Plan I" : 0.02,
+      "Motion Plan P" : 0.2
+   },
+   "Shift Throttle Detent" : 150,
+   "Auto Upshift Enabled" : true,
+   "Upshift Min Velocity" : 5,
+   "Min time before upshift" : 500,
+   "Turn Dead Zone" : 0.1,
+   "Min time before downshift" : 100
+}

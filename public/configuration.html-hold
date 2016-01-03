@@ -1,0 +1,155 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sirius | Configuration</title>
+    <link rel="stylesheet" href="css/foundation.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="/css/foundation-icons.css" />
+  </head>
+  <body>
+
+    <header class="header-small">
+      <h1 class="main-header">&nbsp;</h1>
+      <ul class="header-subnav">
+        <li><a href="/">Welcome</a></li>
+        <li><a href="/configuration.html" class="is-active">Configuration</a></li>
+        <li><a href="/logs.html">Logs</a></li>
+      </ul>
+    </header>
+
+    <div class="row">
+      <div class="large-12 columns">
+        <h1>Configuration</h1>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="large-8 medium-8 columns">
+        <form class="configuration">
+          <div class="row">
+            <div class="large-12 columns">
+              <label>Min time before upshift</label>
+              <input type="text" name="Min time before upshift" placeholder="ms" value="500" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <label>Turn Dead Zone</label>
+              <input type="text" name="Turn Dead Zone" placeholder="Joystick range" value="0.1" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <label>Min time before downshift</label>
+              <input type="text" placeholder="100" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <label>Auto Upshift Enabled</label>
+              <input type="text" placeholder="true" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <label>Throttle Ramp Rate</label>
+              <input type="text" placeholder="0.05" />
+            </div>
+          </div>
+
+          <fieldset class="callout light-gray">
+            <h5>Auton</h5>
+            <div class="row">
+              <div class="large-12 columns">
+                <label>Motion Plan D</label>
+                <input type="text" value="0.05" name="Auton[Motion Plan D]" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="large-12 columns">
+                <label>Motion Plan I</label>
+                <input type="text" placeholder="0.02" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="large-12 columns">
+                <label>Motion Plan P</label>
+                <input type="text" placeholder="0.2" />
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="callout light-gray">
+            <h5>Turn PID</h5>
+            <div class="row">
+              <div class="large-12 columns">
+                <label>P Coff</label>
+                <input type="text" placeholder="0.2" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="large-12 columns">
+                <label>I Coff</label>
+                <input type="text" placeholder="0.02" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="large-12 columns">
+                <label>D Coff</label>
+                <input type="text" placeholder="0.05" />
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="large-12 columns">
+              <label>Upshift Min Throttle</label>
+              <input type="text" placeholder="0.7" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <label>Throttle Dead Zone</label>
+              <input type="text" placeholder="0.1" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <label>Upshift Min Velocity</label>
+              <input type="text" placeholder="5" />
+            </div>
+          </div>
+          <div class="row">
+            <div class="large-12 columns">
+              <label>Shift Throttle Detent</label>
+              <input type="text" placeholder="150" />
+            </div>
+          </div>
+
+          <input class="button small large-12" type="submit" value="Send Message" />
+        </form>
+      </div>
+
+      <div class="large-4 medium-4 columns">
+        <h5>Sirius Configuration</h5>
+        <p><a href="#" class="small button large-4 medium-4">Activate</a><br/>
+        <a href="#" class="medium success button large-4 medium-4">Delete</a><br/>
+        <a href="#" class="medium secondary button large-4 medium-4">Copy</a></p>
+        <div class="callout">
+          <h5>Sirius Setup</h5>
+          <p>Some simple configuration text, message info goes here.</p>
+          <a href="http://lightningrobotics.com/" class="small button">Go to Lightning Robotics</a>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/vendor/jquery.min.js"></script>
+    <script src="js/vendor/what-input.min.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <script src="js/jquery.serializejson.min.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>

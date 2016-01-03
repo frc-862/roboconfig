@@ -1,3 +1,5 @@
+#include<iostream>
+#include <unistd.h>
 #include "config.h"
 
 #include<fstream>
@@ -14,7 +16,14 @@ Json::Value Config::get() {
         tinydir_readfile(&dir, &file);
 
         if (!file.is_dir)
-            result.append(file.name);
+        {
+            std::string name = file.name;
+            size_t ext = name.find_last_of('.');
+            if (ext != std::string::npos) {
+                name.erase(ext);
+            }
+            result.append(name);
+        }
     }
     tinydir_close(&dir);
 
@@ -46,6 +55,10 @@ void Config::set(const std::string& name, const Json::Value& value) {
     config_store[name] = value;
     std::ofstream of(path + "/" + name + ".json");
     of << value.toStyledString();
+    //Json::StreamWriterBuilder wbuilder;
+    //wbuilder["indentation"] = "\t";
+    //std::string document = Json::writeString(wbuilder, value);
+    //of << document;
 }
 
 bool Config::set(const std::string& name, const std::string& json_text) {
@@ -62,4 +75,10 @@ bool Config::remove(const std::string &name) {
     std::lock_guard<std::mutex> lock(mutex);
     config_store[name] = Json::nullValue;
     return unlink((path + "/" + name + ".json").c_str()) == 0;
+}
+
+bool Config::activate(const std::string& name) {
+	std::string from = path + "/" + name + ".json";
+	std::string to = "/home/lvuser/sirius.conf";
+	return symlink(from.c_str(), to.c_str()) == 0;
 }

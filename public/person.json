@@ -1,0 +1,22 @@
+{
+  "location": {
+    "city": "San Francisco",
+    "state": "Cali",
+    "postal code": "48188"
+  },
+  "pets": [
+    {
+      "type": "dog",
+      "name": "Spot",
+      "fixed": true
+    },
+    {
+      "type": "cat",
+      "name": "Whiskers",
+      "fixed": false
+    }
+  ],
+  "name": "John Smith",
+  "age": 35,
+  "gender": "male"
+}

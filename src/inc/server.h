@@ -7,7 +7,7 @@
 
 class Server {
 public:
-    Server(const std::string& p, const std::string& ap, const std::string& r, const std::string& c);
+    Server(const std::string& p, const std::string& r);
     Server(const Json::Value& config);
     Server(const std::string fname);
 
@@ -47,9 +47,7 @@ protected:
     virtual void setup(const Json::Value& config);
 
     std::string port;
-    std::string api_prefix;
     std::string root;
-    std::string config_path;
 
     Json::Value server_config;
 

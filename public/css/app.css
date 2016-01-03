@@ -1,0 +1,84 @@
+.header {
+  text-align: center;
+  background: url("/img/sirius_banner.png") no-repeat center center;
+  background-size: cover;
+  padding: 4rem; }
+  .header .main-header {
+    color: #333; 
+    font-weight: bold;
+    font-size: 350%; }
+
+.header .top-spacer {
+  height: 30vh; }
+
+.header .mid-spacer {
+  height: 25vh; }
+
+.header-subnav {
+  float: none;
+  position: relative;
+  top: 4rem;
+  text-align: center;
+  margin-bottom: 0; }
+  .header-subnav li {
+    float: none;
+    display: inline-block; }
+    .header-subnav li a {
+      padding: 0.9rem 1rem 0.75rem;
+      font-size: 0.875rem;
+      color: #fff;
+      text-transform: uppercase;
+      display: block;
+      font-weight: bold;
+      letter-spacing: 1px; }
+      .header-subnav li a.is-active {
+        background: rgba(250, 250, 250, 0.7);
+        color: #333; }
+      .header-subnav li a:hover {
+        background: rgba(250, 250, 250, 0.7);
+        color: #333;
+        transition: all .25s ease-in-out; }
+
+.header-small {
+  text-align: center;
+  background: url("/img/frc-stronghold-header.jpg") no-repeat center center;
+  background-size: cover;
+  padding: 4rem; }
+  .header-small .main-header {
+    color: #333; 
+    font-weight: bold;
+    font-size: 350%; }
+
+.header-small .top-spacer {
+  height: 30vh; }
+
+.header-small .mid-spacer {
+  height: 25vh; }
+
+.header-subnav {
+  float: none;
+  position: relative;
+  top: 4rem;
+  text-align: center;
+  margin-bottom: 0; }
+  .header-subnav li {
+    float: none;
+    display: inline-block; }
+    .header-subnav li a {
+      padding: 0.9rem 1rem 0.75rem;
+      font-size: 0.875rem;
+      color: #fff;
+      text-transform: uppercase;
+      display: block;
+      font-weight: bold;
+      letter-spacing: 1px; }
+      .header-subnav li a.is-active {
+        background: rgba(250, 250, 250, 0.7);
+        color: #333; }
+      .header-subnav li a:hover {
+        background: rgba(250, 250, 250, 0.7);
+        color: #333;
+        transition: all .25s ease-in-out; }
+
+.light-gray {
+  background: #eee; }

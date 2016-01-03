@@ -6,19 +6,18 @@
 using namespace std;
 
 bool is_prefix(string const& prefix, string const& str) {
-    return equal(prefix.begin(), prefix.end(),
-//            prefix.begin() + std::min(prefix.size(), str.size()),
-            str.begin());
+    return equal(prefix.begin(), prefix.end(), str.begin());
 }
 
 class RoboConfig : public Server {
 public:
-    RoboConfig(const std::string fname) : Server(fname), api_base("/api/config"), robot_config("config"), log_path("logs") {}
+    RoboConfig(const std::string fname) : Server(fname), 
+            api_root("/api"), api_activate(api_root + "/activate"), api_config(api_root + "/config"),
+	  	  	  robot_config("config"), log_path("logs") {}
 
     void http_post(struct mg_connection *nc, struct http_message *hm) override;
     void http_get(struct mg_connection *nc, struct http_message *hm) override;
     void http_delete(struct mg_connection *nc, struct http_message *hm) override;
-
 
     virtual void websocket_request(struct mg_connection *nc, struct http_message *hm) override;
     virtual void websocket_create(struct mg_connection *nc) override;
@@ -28,10 +27,14 @@ public:
     virtual void idle(mg_connection *connection) override;
 
 private:
-    bool if_api(struct http_message *hm) { return if_api(asString(hm->uri)); }
-    bool if_api(const string& uri) { return is_prefix(api_base, uri); }
+    bool if_api_config(struct http_message *hm) { return if_api_config(asString(hm->uri)); }
+    bool if_api_config(const string& uri) { return is_prefix(api_config, uri); }
+    bool if_activate(struct http_message *hm) { return if_activate(asString(hm->uri)); }
+    bool if_activate(const string& uri) { return is_prefix(api_activate, uri); }
 
-    string api_base;
+    string api_root;
+    string api_activate;
+    string api_config;
     Config robot_config;
     string log_path;
 };
@@ -39,13 +42,13 @@ private:
 void RoboConfig::http_get(struct mg_connection *nc, struct http_message *hm) {
     string uri = asString(hm->uri);
 
-    if (if_api(uri)) {
-        if (uri == api_base) {
+    if (if_api_config(uri)) {
+        if (uri == api_config) {
             // this is an index request, return all our config files
             send_http_json_response(nc, robot_config.get());
         } else {
             // find the correct config file and return it
-            send_http_json_response(nc, robot_config.get(uri.substr(api_base.size())));
+            send_http_json_response(nc, robot_config.get(uri.substr(api_config.size())));
         }
     } else {
         Server::http_get(nc, hm);
@@ -55,14 +58,24 @@ void RoboConfig::http_get(struct mg_connection *nc, struct http_message *hm) {
 void RoboConfig::http_post(struct mg_connection *nc, struct http_message *hm) {
     string uri = asString(hm->uri);
 
-    if (if_api(uri)) {
-        if (uri == api_base) {
+    if (if_api_config(uri)) {
+        if (uri == api_config) {
             send_http_error(nc, 405, "Cannot set root");
         } else {
-            if (robot_config.set(uri.substr(api_base.size()), asString(hm->body)))
+            if (robot_config.set(uri.substr(api_config.size()), asString(hm->body)))
                 send_http_response(nc);
             else
                 send_http_error(nc, 400, "Invalid JSON Body");
+        }
+    } else if (if_activate(uri)) {
+        if (uri == api_activate) {
+            // index request, is not supported
+        	send_http_error(nc, 400, "You cannot activate a missing configuration");
+        } else {
+        	if (robot_config.activate(uri.substr(api_activate.size())))
+        		send_http_response(nc);
+        	else
+        		send_http_error(nc, 404, "Could not activate");
         }
     } else {
         Server::http_post(nc, hm);
@@ -72,11 +85,11 @@ void RoboConfig::http_post(struct mg_connection *nc, struct http_message *hm) {
 void RoboConfig::http_delete(struct mg_connection *nc, struct http_message *hm) {
     string uri = asString(hm->uri);
 
-    if (if_api(uri)) {
-        if (uri == api_base) {
+    if (if_api_config(uri)) {
+        if (uri == api_config) {
             send_http_error(nc, 405, "Cannot delete root");
         } else {
-            if (robot_config.remove(uri.substr(api_base.size())))
+            if (robot_config.remove(uri.substr(api_config.size())))
                 send_http_response(nc);
             else
                 send_http_error(nc, 404, "Unable to delete");
@@ -100,9 +113,11 @@ void RoboConfig::websocket_request(struct mg_connection *nc, struct http_message
 }
 
 void RoboConfig::websocket_create(struct mg_connection *nc) {
-    cout << "websocket create" << endl;
     WSFileTail* wsft = (WSFileTail *) nc->user_data;
     string lines = wsft->lines().toStyledString();
+    //Json::StreamWriterBuilder wbuilder;
+    //wbuilder["indentation"] = "\t";
+    //std::string lines = Json::writeString(wbuilder, wsft->lines());
     mg_send_websocket_frame(nc, WEBSOCKET_OP_TEXT, lines.c_str(), lines.size());
 }
 

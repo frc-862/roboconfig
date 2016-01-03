@@ -15,6 +15,7 @@ public:
     bool set(const std::string& fname, const std::string& value);
     void set(const std::string& fname, const Json::Value& value);
     bool remove(const std::string& fname);
+    bool activate(const std::string& fname);
 private:
     Json::Reader reader;
     std::mutex mutex;

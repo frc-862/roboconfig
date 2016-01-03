@@ -7,8 +7,7 @@ const struct mg_str Server::get_method = MG_STR("GET");
 const struct mg_str Server::post_method = MG_STR("POST");
 const struct mg_str Server::delele_method = MG_STR("DELETE");
 
-Server::Server(const string& p, const string& ap, const string& r, const string& c) :
-    port(p), api_prefix(ap), root(r), config_path(c) {
+Server::Server(const string& p, const string& r) : port(p), root(r) {
     memset(&server_opts, 0, sizeof(server_opts));
     setup();
 }
@@ -39,10 +38,8 @@ void Server::setup() {
 void Server::setup(const Json::Value& passed_config) {
     server_config = passed_config;
 
-    port = server_config.get("port", "8080").asString();
-    api_prefix = server_config.get("api_prefix", "/api").asString();
+    port = server_config.get("port", "5100").asString();
     root = server_config.get("document_root", "public").asString();
-    config_path = server_config.get("config_directory", "config").asString();
 
     setup();
 }
@@ -143,7 +140,11 @@ void Server::send_http_json_response(struct mg_connection *nc, const Json::Value
     if (response == Json::nullValue) {
         send_http_error(nc, 404, "Not Found");
     } else {
-        string buf = response.toStyledString();
+        //string buf = response.toStyledString();
+        Json::StreamWriterBuilder wbuilder;
+        //wbuilder["indentation"] = "\t";
+        std::string buf = Json::writeString(wbuilder, response);
+        //string buf = response.asString();
 
         mg_printf(nc, "HTTP/1.1 %d %s\r\n"
                           "Content-Length: %d\r\n"
