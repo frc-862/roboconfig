@@ -7,7 +7,6 @@
 
 class Server {
 public:
-    Server(const std::string& p, const std::string& r);
     Server(const Json::Value& config);
     Server(const std::string fname);
 
@@ -38,6 +37,9 @@ public:
 
     void send_http_json_response(struct mg_connection *nc, const Json::Value& response, int code=200, const std::string& reason="OK");
 
+    Json::Value get_config() { return server_config; }
+    std::string get_config(const std::string& key, const std::string& def) { return get_config().get(key, def).asString(); }
+    
 protected:
     struct mg_mgr mgr;
     struct mg_serve_http_opts server_opts;

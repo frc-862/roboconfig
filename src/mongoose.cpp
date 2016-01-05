@@ -332,7 +332,10 @@ enum cs_log_level s_cs_log_level =
 void cs_log_printf(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
     vfprintf(stderr, fmt, ap);
+#pragma GCC diagnostic pop
     va_end(ap);
     fputc('\n', stderr);
     fflush(stderr);
@@ -5861,7 +5864,10 @@ static char *addenv(struct cgi_env_block *block, const char *fmt, ...) {
     if (space > 0) {
         /* Copy VARIABLE=VALUE\0 string into the free space */
         va_start(ap, fmt);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
         n = vsnprintf(added, (size_t) space, fmt, ap);
+#pragma GCC diagnostic pop
         va_end(ap);
 
         /* Make sure we do not overflow buffer and the envp array */
@@ -6617,7 +6623,10 @@ int mg_avprintf(char **buf, size_t size, const char *fmt, va_list ap) {
     int len;
 
     va_copy(ap_copy, ap);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
     len = vsnprintf(*buf, size, fmt, ap_copy);
+#pragma GCC diagnostic pop
     va_end(ap_copy);
 
     if (len < 0) {
@@ -6630,7 +6639,10 @@ int mg_avprintf(char **buf, size_t size, const char *fmt, va_list ap) {
             size *= 2;
             if ((*buf = (char *) MG_MALLOC(size)) == NULL) break;
             va_copy(ap_copy, ap);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
             len = vsnprintf(*buf, size, fmt, ap_copy);
+#pragma GCC diagnostic pop
             va_end(ap_copy);
         }
         /* LCOV_EXCL_STOP */
@@ -6640,7 +6652,10 @@ int mg_avprintf(char **buf, size_t size, const char *fmt, va_list ap) {
             len = -1; /* LCOV_EXCL_LINE */
         } else {    /* LCOV_EXCL_LINE */
             va_copy(ap_copy, ap);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
             len = vsnprintf(*buf, len + 1, fmt, ap_copy);
+#pragma GCC diagnostic pop
             va_end(ap_copy);
         }
     }

@@ -12,8 +12,10 @@ bool is_prefix(string const& prefix, string const& str) {
 class RoboConfig : public Server {
 public:
     RoboConfig(const std::string fname) : Server(fname), 
-            api_root("/api"), api_activate(api_root + "/activate"), api_config(api_root + "/config"),
-	  	  	  robot_config("config"), log_path("logs") {}
+            api_root(get_config("api_root", "/api")), 
+            api_activate(api_root + "/activate"), api_config(api_root + "/config"),
+	  	  	  robot_config(get_config("config_root", "config"), get_config("robot_config", "/home/lvuser/sirius.conf")), 
+            log_path(get_config("log_path", "logs")) {}
 
     void http_post(struct mg_connection *nc, struct http_message *hm) override;
     void http_get(struct mg_connection *nc, struct http_message *hm) override;
@@ -50,6 +52,9 @@ void RoboConfig::http_get(struct mg_connection *nc, struct http_message *hm) {
             // find the correct config file and return it
             send_http_json_response(nc, robot_config.get(uri.substr(api_config.size())));
         }
+    } else if (if_activate(uri)) {
+      send_http_json_response(nc, robot_config.activated());
+
     } else {
         Server::http_get(nc, hm);
     }

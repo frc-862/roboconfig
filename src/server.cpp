@@ -7,11 +7,6 @@ const struct mg_str Server::get_method = MG_STR("GET");
 const struct mg_str Server::post_method = MG_STR("POST");
 const struct mg_str Server::delele_method = MG_STR("DELETE");
 
-Server::Server(const string& p, const string& r) : port(p), root(r) {
-    memset(&server_opts, 0, sizeof(server_opts));
-    setup();
-}
-
 Server::Server(const Json::Value& config) {
     memset(&server_opts, 0, sizeof(server_opts));
     setup(config);
@@ -21,13 +16,11 @@ Server::Server(const string fname) {
     memset(&server_opts, 0, sizeof(server_opts));
     ifstream stream(fname, ifstream::binary);
     stream >> server_config;
-
     setup(server_config);
 }
 
 void Server::setup() {
     struct mg_connection *nc;
-
     mg_mgr_init(&mgr, this);
 
     nc = mg_bind(&mgr, port.c_str(), raw_event_handler);
@@ -38,8 +31,8 @@ void Server::setup() {
 void Server::setup(const Json::Value& passed_config) {
     server_config = passed_config;
 
-    port = server_config.get("port", "5100").asString();
-    root = server_config.get("document_root", "public").asString();
+    port = get_config("port", "5100");
+    root = get_config("robot_home", "") + get_config("document_root", "public");
 
     setup();
 }
