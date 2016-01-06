@@ -17,6 +17,7 @@ public:
     Json::Value lines();
 
 private:
+    Json::Reader reader;
     std::string filename;
     std::ifstream in;
     int last_position;

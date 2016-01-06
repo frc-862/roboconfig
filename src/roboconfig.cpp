@@ -107,7 +107,7 @@ void RoboConfig::http_delete(struct mg_connection *nc, struct http_message *hm) 
 void RoboConfig::websocket_request(struct mg_connection *nc, struct http_message *hm) {
     string uri = asString(hm->uri);
     // Expect ws://tail/fname
-    WSFileTail* wsft = new WSFileTail(log_path + "/" + uri.substr(5));
+    WSFileTail* wsft = new WSFileTail(log_path + uri.substr(5));
 
     if (!wsft->good()) {
         delete wsft;
@@ -120,19 +120,14 @@ void RoboConfig::websocket_request(struct mg_connection *nc, struct http_message
 void RoboConfig::websocket_create(struct mg_connection *nc) {
     WSFileTail* wsft = (WSFileTail *) nc->user_data;
     string lines = wsft->lines().toStyledString();
-    //Json::StreamWriterBuilder wbuilder;
-    //wbuilder["indentation"] = "\t";
-    //std::string lines = Json::writeString(wbuilder, wsft->lines());
     mg_send_websocket_frame(nc, WEBSOCKET_OP_TEXT, lines.c_str(), lines.size());
 }
 
 void RoboConfig::websocket_frame(struct mg_connection *nc, struct websocket_message *wm) {
-    cout << "websocket frame" << endl;
     Server::websocket_frame(nc, wm);
 }
 
 void RoboConfig::websocket_close(struct mg_connection *nc) {
-    cout << "web socket disconnect" << endl;
     delete ((WSFileTail *) nc->user_data);
     nc->user_data = nullptr;
     Server::websocket_close(nc);
