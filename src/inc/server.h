@@ -38,6 +38,7 @@ public:
     void send_http_json_response(struct mg_connection *nc, const Json::Value& response, int code=200, const std::string& reason="OK");
 
     Json::Value get_config() { return server_config; }
+    Json::Value json_body(struct http_message *hm);
     std::string get_config(const std::string& key, const std::string& def) { return get_config().get(key, def).asString(); }
     
 protected:

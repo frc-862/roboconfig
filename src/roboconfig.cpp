@@ -2,6 +2,7 @@
 #include "server.h"
 #include "config.h"
 #include "ws_file_tail.h"
+#include "traj.h"
 
 using namespace std;
 
@@ -29,6 +30,8 @@ public:
     virtual void idle(mg_connection *connection) override;
 
 private:
+    bool if_generate_route(const string& uri) { return is_prefix("/route", uri); }
+    bool if_generate_route(struct http_message *hm) { return if_generate_route(asString(hm->uri)); }
     bool if_api_config(struct http_message *hm) { return if_api_config(asString(hm->uri)); }
     bool if_api_config(const string& uri) { return is_prefix(api_config, uri); }
     bool if_activate(struct http_message *hm) { return if_activate(asString(hm->uri)); }
@@ -63,7 +66,15 @@ void RoboConfig::http_get(struct mg_connection *nc, struct http_message *hm) {
 void RoboConfig::http_post(struct mg_connection *nc, struct http_message *hm) {
     string uri = asString(hm->uri);
 
-    if (if_api_config(uri)) {
+    if (if_generate_route(uri)) {
+      Json::Value req = json_body(hm);
+      if (req != Json::nullValue)
+      {
+        send_http_json_response(nc, generate_path(req));
+      } else {
+        send_http_error(nc, 400, "Invalid JSON Body");
+      }
+    } else if (if_api_config(uri)) {
         if (uri == api_config) {
             send_http_error(nc, 405, "Cannot set root");
         } else {

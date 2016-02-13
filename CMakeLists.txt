@@ -21,9 +21,13 @@ project(roboconfig)
 
 include_directories("${CMAKE_SOURCE_DIR}/src/inc")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -W -Wall -Wno-deprecated-register")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y -W -Wall -Wno-deprecated-register")
 
 set(SOURCE_FILES
+        src/planner.cpp
+        src/segment.cpp
+        src/trajectory.cpp
+        
         src/inc/json/json-forwards.h
         src/inc/json/json.h
         src/jsoncpp.cpp
@@ -37,6 +41,17 @@ set(SOURCE_FILES
         src/roboconfig.cpp
         src/inc/ws_file_tail.h
         src/ws_file_tail.cpp
+        src/json_trajectory.cpp
         )
 
 add_executable(roboconfig ${SOURCE_FILES})
+
+add_custom_target(copy_files)
+add_custom_command(TARGET copy_files POST_BUILD COMMAND ${CMAKE_COMMAND} -E 
+  make_directory config)
+add_custom_command(TARGET copy_files POST_BUILD COMMAND ${CMAKE_COMMAND} -E 
+  make_directory public)
+add_custom_command(TARGET copy_files POST_BUILD COMMAND ${CMAKE_COMMAND} -E 
+  copy_directory ${CMAKE_SOURCE_DIR}/config config)
+add_custom_command(TARGET copy_files POST_BUILD COMMAND ${CMAKE_COMMAND} -E 
+  copy_directory ${CMAKE_SOURCE_DIR}/public public)

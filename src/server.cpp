@@ -1,4 +1,5 @@
 #include <fstream>
+#include "json/json.h"
 #include "server.h"
 
 using namespace std;
@@ -147,3 +148,14 @@ void Server::send_http_json_response(struct mg_connection *nc, const Json::Value
                   (int) buf.size(), buf.c_str());
     }
 }
+
+Json::Value Server::json_body(struct http_message *hm) {
+    Json::Reader reader;
+    Json::Value value;
+    if (reader.parse(asString(hm->body), value))
+    {
+        return value;
+    }
+    return Json::nullValue;
+}
+
