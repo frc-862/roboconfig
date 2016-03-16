@@ -1,4 +1,5 @@
 #pragma once
+#include <stdexcept>
 #include <vector>
 #include <math.h>
 
@@ -53,7 +54,7 @@ public:
 
   const waypoint& operator[](unsigned index) {
     if (index > waypoints.size()) 
-      throw std::range_error("waypoint index invalid");
+      throw std::runtime_error("waypoint index invalid");
 
     return waypoints[index];
   }

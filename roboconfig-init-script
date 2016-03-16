@@ -1,0 +1,49 @@
+#! /bin/sh
+set -e
+
+PIDFILE=/var/run/roboconfig.pid
+
+# source function library
+. /etc/init.d/functions
+
+test -x /home/lvuser/roboconfig || exit 0
+# ( /usr/sbin/sshd -\? 2>&1 | grep -q OpenSSH ) 2>/dev/null || exit 0
+
+export USER=lvuser
+export GRP=ni
+export BIN=/home/lvuser/roboconfig
+export HOME=/home/lvuser
+export PATH="${PATH:+$PATH:}/usr/sbin:/sbin"
+
+case "$1" in
+  start)
+	echo "Starting RoboConfig Shell server: roboconfig"
+	start-stop-daemon -S -p $PIDFILE -c $USER:$GRP -d $HOME -x $BIN &
+        echo "done."
+	;;
+  stop)
+        echo -n "Stopping OpenBSD Secure Shell server: sshd"
+	start-stop-daemon -K -p $PIDFILE -c $USER:$GRP -d $HOME -x $BIN
+        echo "."
+	;;
+
+  restart)
+        echo -n "Restarting RoboConfig Shell server: sshd"
+	start-stop-daemon -K -p $PIDFILE -c $USER:$GRP --oknodo -d $HOME -x $BIN
+	sleep 2
+	start-stop-daemon -S -p $PIDFILE -c $USER:$GRP -d $HOME -x $BIN &
+	echo "."
+	;;
+
+  status)
+	status /usr/sbin/roboconfig
+        echo $?
+  ;;
+
+  *)
+	echo "Usage: /etc/init.d/roboconfig {start|stop|status|restart}"
+	exit 1
+esac
+
+exit 0
+

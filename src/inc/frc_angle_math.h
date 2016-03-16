@@ -38,4 +38,5 @@ namespace frc_math {
   inline double degree2radian(double degree) {
     return degree * (M_PI / 180);
   }
-};
+}
+
